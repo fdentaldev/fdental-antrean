@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fdental-antrean",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-10",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Worker routes
+  "routes": [
+    {
+      "pattern": "antrean.fdental.id/*",
+      "zone_name": "fdental.id"
+    }
+  ],
+  // KV Namespaces
+  "kv_namespaces": [
+    {
+      "binding": "FDENTAL_KV",
+      "id": "bb793404343742489ef2a2ce727de25e"
+    }
+  ],
+  // Environment variables
+  "vars": {
+    "FDENTAL_API_BASE_URL": "https://apis.fdental.id"
+  },
+  // Worker placement
+  "placement": {
+    "region": "aws:ap-southeast-3"
+  }
+}

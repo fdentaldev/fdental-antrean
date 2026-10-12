@@ -1,0 +1,167 @@
+{
+  "branch": {
+    "id": 1,
+    "branchName": "F Dental Kebumen",
+    "branchTitle": "Klinik Pratama Rawat Jalan Gigi dan Mulut",
+    "branchAddressLine1": "Jl. K.H Hasyim Ashari No. 12, Kebumen",
+    "branchAddressLine2": "Kab. Kebumen, Jawa Tengah",
+    "branchLogoUrl": "/logos/1.png"
+  },
+  "serverTime": "2026-10-12T09:15:30+07:00",
+  "doctors": [
+    {
+      "id": "clx0doctor0000000000000001",
+      "name": "drg. Fitra Andri Kurniasih",
+      "schedule": {
+        "startTime": "08:00",
+        "endTime": "12:00"
+      },
+      "nowServing": {
+        "id": "clx0visit00000000000000001",
+        "queueNumber": "U12",
+        "visitStatus": "IN_PROGRESS",
+        "patient": {
+          "newMedRecNumber": "00101234",
+          "fullName": "Budi Santoso"
+        }
+      }
+    },
+    {
+      "id": "clx0doctor0000000000000002",
+      "name": "drg. M Darari Fathan",
+      "schedule": {
+        "startTime": "10:00",
+        "endTime": "16:00"
+      },
+      "nowServing": {
+        "id": "clx0visit00000000000000002",
+        "queueNumber": "B11",
+        "visitStatus": "IN_PROGRESS",
+        "patient": {
+          "newMedRecNumber": "00104821",
+          "fullName": "Maya Tanjung"
+        }
+      }
+    }
+  ],
+  "queue": [
+    {
+      "id": "clx0visit00000000000000003",
+      "queueNumber": "U13",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000001",
+        "name": "drg. Nurliza Prawanti"
+      },
+      "patient": {
+        "newMedRecNumber": "00105678",
+        "fullName": "Siti Rahmawati"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000004",
+      "queueNumber": "B14",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000002",
+        "name": "drg. Mokhammad Hidayat Nursalim"
+      },
+      "patient": {
+        "newMedRecNumber": "00109012",
+        "fullName": "Andi Prasetyo"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000005",
+      "queueNumber": "A15",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000001",
+        "name": "drg. Nurliza Prawanti"
+      },
+      "patient": {
+        "newMedRecNumber": "00103456",
+        "fullName": "Dewi Lestari"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000006",
+      "queueNumber": "U16",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000002",
+        "name": "drg. Mokhammad Hidayat Nursalim"
+      },
+      "patient": {
+        "newMedRecNumber": "00107890",
+        "fullName": "Rudi Hartono"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000007",
+      "queueNumber": "U17",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000001",
+        "name": "drg. Nurliza Prawanti"
+      },
+      "patient": {
+        "newMedRecNumber": "00102345",
+        "fullName": "Nina Kusuma"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000008",
+      "queueNumber": "B18",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000002",
+        "name": "drg. Mokhammad Hidayat Nursalim"
+      },
+      "patient": {
+        "newMedRecNumber": "00106789",
+        "fullName": "Hadi Wijaya"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000009",
+      "queueNumber": "U19",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000001",
+        "name": "drg. Nurliza Prawanti"
+      },
+      "patient": {
+        "newMedRecNumber": "00100123",
+        "fullName": "Lina Marlina"
+      }
+    },
+    {
+      "id": "clx0visit00000000000000010",
+      "queueNumber": "A20",
+      "visitStatus": "ANTREAN",
+      "attendingDoctor": {
+        "id": "clx0doctor0000000000000002",
+        "name": "drg. Mokhammad Hidayat Nursalim"
+      },
+      "patient": {
+        "newMedRecNumber": "00104567",
+        "fullName": "Yoga Aditya"
+      }
+    }
+  ],
+  "waitingCount": 8,
+  "announcements": [
+    "Mohon menyiapkan kartu identitas saat dipanggil.",
+    "Klinik buka Senin-Sabtu pukul 08.00-20.00 WIB."
+  ],
+  "video": {
+    "type": "internal",
+    "urls": [
+      "https://assets.fdental.id/video-antrean/16909073_1280_720_60fps.mp4",
+      "https://assets.fdental.id/video-antrean/16443708_1280_720_30fps.mp4",
+      "https://assets.fdental.id/video-antrean/16464986_1280_720_60fps.mp4",
+      "https://assets.fdental.id/video-antrean/16909073_1280_720_60fps.mp4"
+    ]
+  }
+}
