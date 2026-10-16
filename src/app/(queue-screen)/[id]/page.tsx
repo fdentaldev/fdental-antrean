@@ -1,5 +1,4 @@
-import { getQueueData } from '@/lib/queue'
-import QueueScreen from '@/views/QueueScreen'
+import { redirect } from 'next/navigation'
 
 type Props = {
   params: Promise<{
@@ -7,11 +6,10 @@ type Props = {
   }>
 }
 
-const QueuePage = async ({ params }: Props) => {
+const LegacyQueueRoute = async ({ params }: Props) => {
   const { id } = await params
-  const data = await getQueueData(id)
 
-  return <QueueScreen data={data} />
+  redirect(`/${encodeURIComponent(id)}`)
 }
 
-export default QueuePage
+export default LegacyQueueRoute

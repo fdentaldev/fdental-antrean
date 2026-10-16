@@ -27,7 +27,8 @@
   ],
   // Environment variables
   "vars": {
-    "FDENTAL_API_BASE_URL": "https://apis.fdental.id"
+    "FDENTAL_API_BASE_URL": "https://apis.fdental.id",
+    "QUEUE_REFRESH_INTERVAL_SECONDS": "10"
   },
   // Worker placement
   "placement": {

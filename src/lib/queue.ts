@@ -1,9 +1,24 @@
-import antrean from '@/db/antrean.json'
-
 import type { QueueData } from '@/types/queue'
 
-export const getQueueData = async (branchCode: string): Promise<QueueData> => {
-  void branchCode
+const getApiBaseUrl = () => {
+  const apiBaseUrl = process.env.FDENTAL_API_BASE_URL?.trim()
 
-  return antrean as QueueData
+  if (!apiBaseUrl) {
+    throw new Error('FDENTAL_API_BASE_URL is not configured')
+  }
+
+  return apiBaseUrl.replace(/\/$/, '')
+}
+
+export const getQueueData = async (branchCode: string): Promise<QueueData> => {
+  const response = await fetch(`${getApiBaseUrl()}/api/screenantrian/${encodeURIComponent(branchCode)}`, {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' }
+  })
+
+  if (!response.ok) {
+    throw new Error(`Queue API returned ${response.status} ${response.statusText}`)
+  }
+
+  return (await response.json()) as QueueData
 }

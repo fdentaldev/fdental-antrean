@@ -28,6 +28,8 @@ const colors = {
 
 type Props = {
   data: QueueData
+  branchCode: string
+  refreshIntervalMs: number
 }
 
 type BadgeProps = {
@@ -485,7 +487,10 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => (
   </Box>
 )
 
-const QueueScreen = ({ data }: Props) => {
+const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props) => {
+  const [data, setData] = useState(initialData)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [refreshError, setRefreshError] = useState(false)
   const [currentTime, setCurrentTime] = useState(() => new Date())
 
   useEffect(() => {
@@ -493,6 +498,54 @@ const QueueScreen = ({ data }: Props) => {
 
     return () => window.clearInterval(timer)
   }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    let requestInFlight = false
+    let controller: AbortController | null = null
+
+    const refresh = async () => {
+      if (requestInFlight) return
+
+      requestInFlight = true
+      controller?.abort()
+      controller = new AbortController()
+      setIsRefreshing(true)
+
+      try {
+        const response = await fetch(`/api/screenantrian/${encodeURIComponent(branchCode)}`, {
+          signal: controller.signal,
+          cache: 'no-store',
+          headers: { Accept: 'application/json' }
+        })
+
+        if (!response.ok) throw new Error(`Queue refresh failed with ${response.status}`)
+
+        const nextData = (await response.json()) as QueueData
+
+        if (isMounted) {
+          setData(nextData)
+          setRefreshError(false)
+        }
+      } catch (error) {
+        if (isMounted && !(error instanceof DOMException && error.name === 'AbortError')) {
+          setRefreshError(true)
+        }
+      } finally {
+        requestInFlight = false
+
+        if (isMounted) setIsRefreshing(false)
+      }
+    }
+
+    const timer = window.setInterval(refresh, refreshIntervalMs)
+
+    return () => {
+      isMounted = false
+      controller?.abort()
+      window.clearInterval(timer)
+    }
+  }, [branchCode, refreshIntervalMs])
 
   const formattedServerTime = new Intl.DateTimeFormat('id-ID', {
     weekday: 'long',
@@ -514,7 +567,15 @@ const QueueScreen = ({ data }: Props) => {
         color: colors.ink
       }}
     >
-      <Box sx={{ width: '100%', maxWidth: 1720, mx: 'auto', px: { xs: 2, sm: 3, lg: 5 }, py: { xs: 2, md: 4 } }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 1720,
+          mx: 'auto',
+          px: { xs: 2, sm: 3, lg: 5 },
+          py: { xs: 2, md: 4 }
+        }}
+      >
         <Surface sx={{ px: { xs: 2, md: 3 }, py: 1.5, mb: { xs: 3, md: 4 }, borderRadius: 3 }}>
           <Stack
             direction={{ xs: 'column', md: 'row' }}
@@ -564,7 +625,9 @@ const QueueScreen = ({ data }: Props) => {
                     }
                   }}
                 />
-                <Typography sx={{ color: colors.green, fontSize: '0.8rem', fontWeight: 800 }}>Layanan aktif</Typography>
+                <Typography sx={{ color: colors.green, fontSize: '0.8rem', fontWeight: 800 }}>
+                  {refreshError ? 'Koneksi terganggu' : 'Layanan aktif'}
+                </Typography>
               </Stack>
               <Typography sx={{ color: colors.inkSoft, fontSize: '0.8rem', fontWeight: 700 }}>
                 {formattedServerTime}
@@ -625,7 +688,17 @@ const QueueScreen = ({ data }: Props) => {
             gap: { xs: 4, lg: 3.5 }
           }}
         >
-          <Box sx={{ maxWidth: { lg: 560 }, width: '100%', minWidth: 0 }}>
+          <Box
+            sx={{
+              maxWidth: { lg: 560 },
+              width: '100%',
+              minWidth: 0,
+              transition: 'opacity 220ms ease, transform 220ms ease',
+              opacity: isRefreshing ? 0.82 : 1,
+              transform: isRefreshing ? 'translateY(2px)' : 'translateY(0)',
+              '@media (prefers-reduced-motion: reduce)': { transition: 'none' }
+            }}
+          >
             <Box component='section' aria-labelledby='serving-heading'>
               <SectionTitle eyebrow='Sekarang' title='Nomor yang sedang dilayani' />
               <Box
