@@ -57,6 +57,7 @@ const Badge = ({ children, tone = 'purple' }: BadgeProps) => {
         borderRadius: 2,
         fontSize: '0.75rem',
         fontWeight: 900,
+        whiteSpace: 'nowrap',
         ...styles[tone]
       }}
     >
@@ -398,11 +399,27 @@ const QueueVideo = ({ video }: { video?: QueueVideoConfig }) => {
   )
 }
 
-const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => (
+const getVisitStatus = (status: string): { label: string; tone: NonNullable<BadgeProps['tone']> } => {
+  switch (status.toUpperCase()) {
+    case 'COMPLETED':
+      return { label: 'Selesai', tone: 'green' }
+    case 'IN_PROGRESS':
+      return { label: 'Sedang dilayani', tone: 'gold' }
+    case 'ANTREAN':
+      return { label: 'Menunggu', tone: 'purple' }
+    default:
+      return { label: status, tone: 'purple' }
+  }
+}
+
+const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => {
+  const status = getVisitStatus(item.visitStatus)
+
+  return (
   <Box
     sx={{
       display: 'grid',
-      gridTemplateColumns: { xs: '56px minmax(0, 1fr)', md: '76px minmax(0, 1fr) minmax(170px, 200px)' },
+      gridTemplateColumns: { xs: '56px minmax(0, 1fr)', md: '76px minmax(0, 1fr) minmax(130px, 160px) minmax(100px, 110px)' },
       width: '100%',
       minWidth: 0,
       alignItems: 'center',
@@ -472,10 +489,13 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => (
           minWidth: 0,
           display: '-webkit-box',
           overflow: 'hidden',
+          maxHeight: '2.5em',
           color: colors.plumDeep,
           fontSize: { xs: '0.78rem', md: '0.86rem' },
           fontWeight: 850,
           lineHeight: 1.25,
+          whiteSpace: 'normal',
+          overflowWrap: 'anywhere',
           textOverflow: 'ellipsis',
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 2
@@ -484,8 +504,12 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => (
         {item.attendingDoctor.name.replace('drg. ', '')}
       </Typography>
     </Stack>
+    <Box sx={{ gridColumn: { xs: '2 / -1', md: 'auto' }, justifySelf: { xs: 'start', md: 'stretch' } }}>
+      <Badge tone={status.tone}>{status.label}</Badge>
+    </Box>
   </Box>
-)
+  )
+}
 
 const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props) => {
   const [data, setData] = useState(initialData)
@@ -717,7 +741,7 @@ const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props
                 <Box
                   sx={{
                     display: { xs: 'none', md: 'grid' },
-                    gridTemplateColumns: '76px minmax(0, 1fr) minmax(170px, 200px)',
+                    gridTemplateColumns: '76px minmax(0, 1fr) minmax(130px, 160px) minmax(100px, 110px)',
                     gap: 2,
                     px: 2.25,
                     overflow: 'hidden',
@@ -734,6 +758,7 @@ const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props
                   <Box component='span' sx={{ textAlign: 'center' }}>No.</Box>
                   <Box component='span'>Pasien</Box>
                   <Box component='span'>Dokter</Box>
+                  <Box component='span'>Status</Box>
                 </Box>
                 {data.queue.length > 0 ? (
                   data.queue.map(item => <QueueRow item={item} key={item.id} />)
