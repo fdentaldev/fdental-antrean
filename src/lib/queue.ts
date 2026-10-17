@@ -10,10 +10,23 @@ const getApiBaseUrl = () => {
   return apiBaseUrl.replace(/\/$/, '')
 }
 
+const getApiSecret = () => {
+  const apiSecret = process.env.FDENTAL_API_SECRET?.trim()
+
+  if (!apiSecret) {
+    throw new Error('FDENTAL_API_SECRET is not configured')
+  }
+
+  return apiSecret
+}
+
 export const getQueueData = async (branchCode: string): Promise<QueueData> => {
   const response = await fetch(`${getApiBaseUrl()}/api/screenantrian/${encodeURIComponent(branchCode)}`, {
     cache: 'no-store',
-    headers: { Accept: 'application/json' }
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${getApiSecret()}`
+    }
   })
 
   if (!response.ok) {
