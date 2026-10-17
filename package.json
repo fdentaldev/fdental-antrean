@@ -62,7 +62,7 @@
     "tailwindcss-logical": "3.0.1",
     "tsx": "4.19.2",
     "typescript": "5.5.4",
-    "wrangler": "^4.149.0"
+    "wrangler": "^4.151.0"
   },
   "resolutions": {
     "rimraf": "^5.0.7"
