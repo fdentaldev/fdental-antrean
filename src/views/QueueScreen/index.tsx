@@ -234,8 +234,8 @@ const getYoutubeEmbedUrl = (url: string) => {
 const QueueVideo = ({ video }: { video?: QueueVideoConfig }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
+  const currentIndexRef = useRef(0)
   const [progress, setProgress] = useState({ currentTime: 0, duration: 0 })
-  const lastIndexRef = useRef<number | null>(null)
 
   const internalUrls =
     video?.type === 'internal' ? (video.urls?.length ? video.urls : video.url ? [video.url] : []) : []
@@ -245,30 +245,44 @@ const QueueVideo = ({ video }: { video?: QueueVideoConfig }) => {
 
   useEffect(() => {
     setCurrentIndex(0)
-    lastIndexRef.current = null
+    currentIndexRef.current = 0
   }, [video])
 
+  // Load + play saat URL ganti (termasuk pertama kali mount)
   useEffect(() => {
     const element = videoRef.current
-
     if (!element || !currentUrl) return
 
     element.load()
-    void element.play().catch(() => undefined)
+
+    const playPromise = element.play()
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay diblokir browser — resume saat ada interaksi user pertama
+        const resume = () => void element.play().catch(() => undefined)
+        document.addEventListener('click', resume, { once: true })
+        document.addEventListener('keydown', resume, { once: true })
+      })
+    }
   }, [currentUrl])
 
   const handleVideoEnded = () => {
     setProgress({ currentTime: 0, duration: 0 })
 
-    if (internalUrls.length <= 1) return
+    if (internalUrls.length <= 1) {
+      // Satu video: loop manual supaya lebih reliable daripada atribut `loop`
+      const element = videoRef.current
+      if (element) {
+        element.currentTime = 0
+        void element.play().catch(() => undefined)
+      }
+      return
+    }
 
-    setCurrentIndex(() => {
-      const availableIndexes = internalUrls.map((_, index) => index).filter(index => index !== currentIndex)
-      const nextIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)]
-
-      lastIndexRef.current = nextIndex
-
-      return nextIndex
+    setCurrentIndex(prev => {
+      const next = (prev + 1) % internalUrls.length
+      currentIndexRef.current = next
+      return next
     })
   }
 
