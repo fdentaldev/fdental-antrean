@@ -522,6 +522,13 @@ const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props
     return () => window.clearInterval(timer)
   }, [])
 
+  // Hard reload setiap 5 menit — mencegah video/browser state corrupt setelah lama jalan
+  useEffect(() => {
+    const timer = window.setTimeout(() => window.location.reload(), 5 * 60_000)
+
+    return () => window.clearTimeout(timer)
+  }, [])
+
   useEffect(() => {
     let isMounted = true
     let requestInFlight = false
