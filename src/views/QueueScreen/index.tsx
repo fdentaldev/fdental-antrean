@@ -419,7 +419,7 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => {
   <Box
     sx={{
       display: 'grid',
-      gridTemplateColumns: { xs: '56px minmax(0, 1fr)', md: '76px minmax(0, 1fr) minmax(130px, 160px) minmax(100px, 110px)' },
+      gridTemplateColumns: { xs: '56px minmax(0, 1fr)', md: '76px minmax(0, 1fr) minmax(110px, 130px) minmax(80px, 90px)' },
       width: '100%',
       minWidth: 0,
       alignItems: 'center',
@@ -460,29 +460,8 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => {
     <Stack
       direction='row'
       alignItems='center'
-      gap={0.85}
       sx={{ gridColumn: { xs: '2 / -1', md: 'auto' }, minWidth: 0 }}
     >
-      <Box
-        component='span'
-        aria-hidden='true'
-        sx={{
-          display: 'grid',
-          placeItems: 'center',
-          width: 22,
-          height: 22,
-          flexShrink: 0,
-          border: `1px solid ${colors.lavenderDeep}`,
-          borderRadius: '50%',
-          color: colors.plum,
-          background: colors.lavender,
-          fontSize: '0.82rem',
-          fontWeight: 950,
-          lineHeight: 1
-        }}
-      >
-        ✚
-      </Box>
       <Typography
         title={item.attendingDoctor.name}
         sx={{
@@ -501,10 +480,16 @@ const QueueRow = ({ item }: { item: QueueData['queue'][number] }) => {
           WebkitLineClamp: 2
         }}
       >
-        {item.attendingDoctor.name.replace('drg. ', '')}
+        {item.attendingDoctor.name}
       </Typography>
     </Stack>
-    <Box sx={{ gridColumn: { xs: '2 / -1', md: 'auto' }, justifySelf: { xs: 'start', md: 'stretch' } }}>
+    <Box
+      sx={{
+        gridColumn: { xs: '2 / -1', md: 'auto' },
+        justifySelf: { xs: 'start', md: 'stretch' },
+        textAlign: 'center'
+      }}
+    >
       <Badge tone={status.tone}>{status.label}</Badge>
     </Box>
   </Box>
@@ -741,7 +726,7 @@ const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props
                 <Box
                   sx={{
                     display: { xs: 'none', md: 'grid' },
-                    gridTemplateColumns: '76px minmax(0, 1fr) minmax(130px, 160px) minmax(100px, 110px)',
+                    gridTemplateColumns: '76px minmax(0, 1fr) minmax(110px, 130px) minmax(80px, 90px)',
                     gap: 2,
                     px: 2.25,
                     overflow: 'hidden',
@@ -758,7 +743,7 @@ const QueueScreen = ({ data: initialData, branchCode, refreshIntervalMs }: Props
                   <Box component='span' sx={{ textAlign: 'center' }}>No.</Box>
                   <Box component='span'>Pasien</Box>
                   <Box component='span'>Dokter</Box>
-                  <Box component='span'>Status</Box>
+                  <Box component='span' sx={{ textAlign: 'center' }}>Status</Box>
                 </Box>
                 {data.queue.length > 0 ? (
                   data.queue.map(item => <QueueRow item={item} key={item.id} />)
